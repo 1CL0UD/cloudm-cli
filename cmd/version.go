@@ -10,7 +10,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print version information",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("dbmigrate %s\n", Version)
+		fmt.Printf("cloudm-cli %s\n", Version)
 		fmt.Printf("Build date: %s\n", BuildDate)
 		fmt.Printf("Git commit: %s\n", GitCommit)
 	},

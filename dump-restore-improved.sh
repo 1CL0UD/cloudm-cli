@@ -8,19 +8,19 @@ set -euo pipefail
 
 # ============ CONFIGURATION ============
 # Source (Staging)
-SRC_HOST="${SRC_HOST:-redacted}"
+SRC_HOST="${SRC_HOST:-}"
 SRC_PORT="${SRC_PORT:-5432}"
-SRC_DB="${SRC_DB:-apoadbmasterstaging}"
-SRC_USER="${SRC_USER:-appapoaprod}"
+SRC_DB="${SRC_DB:-}"
+SRC_USER="${SRC_USER:-postgres}"
 SRC_PASSWORD="${SRC_PASSWORD:-}"  # Set via environment variable or .pgpass
 
 # Target (RDS Production)
-DST_HOST="${DST_HOST:-redacted}"
+DST_HOST="${DST_HOST:-}"
 DST_PORT="${DST_PORT:-5432}"
-DST_DB="${DST_DB:-apoa}"
+DST_DB="${DST_DB:-}"
 DST_ADMIN_USER="${DST_ADMIN_USER:-postgres}"
 DST_ADMIN_PASSWORD="${DST_ADMIN_PASSWORD:-}"  # Set via environment variable or .pgpass
-APP_USER="${APP_USER:-app_usr}"
+APP_USER="${APP_USER:-app_user}"
 
 # File names
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)

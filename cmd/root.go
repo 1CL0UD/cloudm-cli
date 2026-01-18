@@ -14,7 +14,7 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "dbmigrate",
+	Use:   "cloudm-cli",
 	Short: "PostgreSQL database migration tool",
 	Long:  `A CLI tool for migrating PostgreSQL databases with dump, restore, and validation capabilities.`,
 }
@@ -27,7 +27,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	// Global flags
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./dbmigrate.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./db.yaml)")
 	rootCmd.PersistentFlags().BoolVar(&dryRun, "dry-run", false, "show what would be done without executing")
 	rootCmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "verbose logging")
 	rootCmd.PersistentFlags().BoolVar(&noColor, "no-color", false, "disable colored output")
@@ -46,7 +46,7 @@ func initConfig() {
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 	} else {
-		viper.SetConfigName("dbmigrate")
+		viper.SetConfigName("db")
 		viper.SetConfigType("yaml")
 		viper.AddConfigPath(".")
 	}

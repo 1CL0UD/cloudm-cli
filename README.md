@@ -1,25 +1,25 @@
-# dbmigrate
+# cloudm-cli
 
-A PostgreSQL database migration tool with dump, restore, and validation capabilities.
+A CLI tool for migrating PostgreSQL databases with dump, restore, and validation capabilities.
 
 ## Installation
 
 ```bash
-curl -L https://github.com/yourcompany/dbmigrate/releases/latest/download/dbmigrate-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m) -o dbmigrate
-chmod +x dbmigrate
-sudo mv dbmigrate /usr/local/bin/
+curl -L https://github.com/1CL0UD/cloudm-cli/releases/latest/download/cloudm-cli-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m) -o cloudm-cli
+chmod +x cloudm-cli
+sudo mv cloudm-cli /usr/local/bin/
 ```
 
 ## Quick Start
 
-1. Create a config file `dbmigrate.yaml`:
+1. Create a config file `db.yaml`:
 
 ```yaml
 source:
   host: "staging.db.example.com"
   port: 5432
-  database: "mydb"
-  user: "dbuser"
+  database: "mydb_staging"
+  user: "app_user"
   password: "${SRC_PASSWORD}"
 
 target:
@@ -28,40 +28,35 @@ target:
   database: "mydb"
   admin_user: "postgres"
   admin_password: "${DST_ADMIN_PASSWORD}"
-  app_user: "app_usr"
+  app_user: "app_user"
 
 options:
   parallel_jobs: 4
   data_parallel_jobs: 2
   exclude_tables:
     - "public.activity_log"
+  output_dir: "./migrations"
+  keep_dumps: true
+  extensions:
+    - "pg_trgm"
 ```
 
-2. Set environment variables:
+2. Run migration:
 
 ```bash
-export SRC_PASSWORD="your-source-password"
-export DST_ADMIN_PASSWORD="your-target-password"
-```
-
-3. Run migration:
-
-```bash
-dbmigrate migrate --config dbmigrate.yaml
+export SRC_PASSWORD="your_source_password"
+export DST_ADMIN_PASSWORD="your_admin_password"
+cloudm-cli migrate --config db.yaml
 ```
 
 ## Commands
 
-- `migrate` - Full migration pipeline
-- `dump` - Dump source database
-- `restore` - Restore from dump files
-- `backup` - Backup target database
-- `validate` - Validate migration
-- `version` - Show version info
-
-## Documentation
-
-See [docs/](docs/) for detailed documentation.
+- `cloudm-cli migrate` - Full migration pipeline
+- `cloudm-cli dump` - Dump source database
+- `cloudm-cli restore` - Restore from dump files
+- `cloudm-cli backup` - Backup target database
+- `cloudm-cli validate` - Compare source and target
+- `cloudm-cli version` - Show version info
 
 ## License
 

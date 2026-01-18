@@ -16,23 +16,23 @@ help:
 
 .PHONY: build
 build:
-	@echo "Building dbmigrate..."
-	go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate main.go
-	@echo "Done! Binary: bin/dbmigrate"
+	@echo "Building cloudm-cli..."
+	go build -ldflags "$(LDFLAGS)" -o bin/cloudm-cli main.go
+	@echo "Done! Binary: bin/cloudm-cli"
 
 .PHONY: build-all
 build-all:
 	@echo "Building for all platforms..."
-	GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate-linux-amd64 main.go
-	GOOS=darwin GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate-darwin-amd64 main.go
-	GOOS=darwin GOARCH=arm64 go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate-darwin-arm64 main.go
-	GOOS=windows GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate-windows-amd64.exe main.go
+	GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o bin/cloudm-cli-linux-amd64 main.go
+	GOOS=darwin GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o bin/cloudm-cli-darwin-amd64 main.go
+	GOOS=darwin GOARCH=arm64 go build -ldflags "$(LDFLAGS)" -o bin/cloudm-cli-darwin-arm64 main.go
+	GOOS=windows GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o bin/cloudm-cli-windows-amd64.exe main.go
 	@echo "Done! Binaries in bin/"
 
 .PHONY: install
 install: build
-	@echo "Installing to /usr/local/bin/dbmigrate..."
-	sudo cp bin/dbmigrate /usr/local/bin/dbmigrate
+	@echo "Installing to /usr/local/bin/cloudm-cli..."
+	sudo cp bin/cloudm-cli /usr/local/bin/cloudm-cli
 	@echo "Done!"
 
 .PHONY: test
@@ -50,7 +50,7 @@ clean:
 
 .PHONY: run
 run: build
-	./bin/dbmigrate --help
+	./bin/cloudm-cli --help
 
 .PHONY: fmt
 fmt:

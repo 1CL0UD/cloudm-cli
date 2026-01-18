@@ -1,17 +1,17 @@
 source:
-  host: "staging.db.example.com"
+  host: "source.db.example.com"
   port: 5432
-  database: "apoadbmasterstaging"
-  user: "appapoaprod"
+  database: "mydb_staging"
+  user: "postgres"
   password: "${SRC_PASSWORD}"
 
 target:
-  host: "prod.db.example.com"
+  host: "target.db.example.com"
   port: 5432
-  database: "apoa"
+  database: "mydb"
   admin_user: "postgres"
   admin_password: "${DST_ADMIN_PASSWORD}"
-  app_user: "app_usr"
+  app_user: "app_user"
 
 options:
   parallel_jobs: 4
