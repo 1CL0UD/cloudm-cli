@@ -1,0 +1,63 @@
+VERSION := 1.0.0
+BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+GIT_COMMIT := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+
+LDFLAGS := -X main.Version=$(VERSION) -X main.BuildDate=$(BUILD_DATE) -X main.GitCommit=$(GIT_COMMIT)
+
+.PHONY: help
+help:
+	@echo "Available targets:"
+	@echo "  build       - Build for current platform"
+	@echo "  build-all   - Build for all platforms"
+	@echo "  install     - Install to /usr/local/bin"
+	@echo "  test        - Run tests"
+	@echo "  clean       - Clean build artifacts"
+	@echo "  run         - Run with test config"
+
+.PHONY: build
+build:
+	@echo "Building dbmigrate..."
+	go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate main.go
+	@echo "Done! Binary: bin/dbmigrate"
+
+.PHONY: build-all
+build-all:
+	@echo "Building for all platforms..."
+	GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate-linux-amd64 main.go
+	GOOS=darwin GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate-darwin-amd64 main.go
+	GOOS=darwin GOARCH=arm64 go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate-darwin-arm64 main.go
+	GOOS=windows GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o bin/dbmigrate-windows-amd64.exe main.go
+	@echo "Done! Binaries in bin/"
+
+.PHONY: install
+install: build
+	@echo "Installing to /usr/local/bin/dbmigrate..."
+	sudo cp bin/dbmigrate /usr/local/bin/dbmigrate
+	@echo "Done!"
+
+.PHONY: test
+test:
+	@echo "Running tests..."
+	go test -v ./...
+
+.PHONY: clean
+clean:
+	@echo "Cleaning..."
+	rm -rf bin/
+	rm -rf migrations/
+	rm -f *.dump *.log *.txt
+	@echo "Done!"
+
+.PHONY: run
+run: build
+	./bin/dbmigrate --help
+
+.PHONY: fmt
+fmt:
+	@echo "Formatting code..."
+	go fmt ./...
+
+.PHONY: lint
+lint:
+	@echo "Running linter..."
+	golangci-lint run

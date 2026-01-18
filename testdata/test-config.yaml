@@ -1,0 +1,26 @@
+source:
+  host: "staging.db.example.com"
+  port: 5432
+  database: "apoadbmasterstaging"
+  user: "appapoaprod"
+  password: "${SRC_PASSWORD}"
+
+target:
+  host: "prod.db.example.com"
+  port: 5432
+  database: "apoa"
+  admin_user: "postgres"
+  admin_password: "${DST_ADMIN_PASSWORD}"
+  app_user: "app_usr"
+
+options:
+  parallel_jobs: 4
+  data_parallel_jobs: 2
+  exclude_tables:
+    - "public.activity_log"
+  output_dir: "./migrations"
+  keep_dumps: true
+  skip_backup: false
+  terminate_connections: true
+  extensions:
+    - "pg_trgm"
