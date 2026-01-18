@@ -61,3 +61,15 @@ fmt:
 lint:
 	@echo "Running linter..."
 	golangci-lint run
+
+.PHONY: release
+release:
+	@read -p "Enter version (e.g., v1.0.0): " version; \
+	git tag -a $$version -m "Release $$version"; \
+	git push origin $$version; \
+	echo "Released $$version - GitHub Actions will build and publish"
+
+.PHONY: release-local
+release-local:
+	@echo "Building release binaries locally..."
+	@./.github/workflows/scripts/build-release.sh
