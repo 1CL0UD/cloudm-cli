@@ -3,6 +3,7 @@ package liftshift
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -20,7 +21,15 @@ type Logger struct {
 // NewLogger creates a new logger instance
 func NewLogger() (*Logger, error) {
 	timestamp := time.Now().Format("20060102_150405")
-	filename := fmt.Sprintf("migration_%s.log", timestamp)
+
+	// Get the directory of the executable
+	execPath, err := os.Executable()
+	if err != nil {
+		// Fallback to current directory if we can't get executable path
+		execPath = os.Args[0]
+	}
+	execDir := filepath.Dir(execPath)
+	filename := filepath.Join(execDir, fmt.Sprintf("migration_%s.log", timestamp))
 
 	file, err := os.Create(filename)
 	if err != nil {

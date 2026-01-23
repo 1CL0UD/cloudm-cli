@@ -86,7 +86,7 @@ detect_platform() {
 # Get latest release version
 get_latest_version() {
     print_info "Fetching latest version..."
-    
+
     local api_response
     if command -v curl >/dev/null 2>&1; then
         api_response=$(curl -sL "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null || echo "")
@@ -133,7 +133,7 @@ download_binary() {
     fi
 
     chmod +x "$DOWNLOADED_FILE"
-    
+
     # Verify binary works
     if ! "$DOWNLOADED_FILE" version >/dev/null 2>&1; then
         print_warning "Downloaded binary is not valid. Will try to build from source."
@@ -165,7 +165,7 @@ build_from_source() {
     git clone --depth 1 "https://github.com/${REPO}.git" "$src_dir" >/dev/null 2>&1
 
     cd "$src_dir"
-    
+
     print_info "Compiling..."
     DOWNLOADED_FILE="${TMP_DIR}/${BINARY_NAME}"
     go build -ldflags "-X main.Version=source -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ) -X main.GitCommit=$(git rev-parse --short HEAD)" -o "$DOWNLOADED_FILE" main.go
@@ -224,7 +224,7 @@ main() {
 
     detect_platform
     print_info "Detected platform: ${PLATFORM}"
-    
+
     # Try to get latest version and download, fallback to source
     if get_latest_version && download_binary; then
         print_success "Downloaded release successfully"

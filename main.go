@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/charmbracelet/bubbles/spinner"
@@ -272,23 +273,15 @@ func runValidationCmd(cfg *liftshift.Config, l *liftshift.Logger) tea.Cmd {
 // =========================================================
 
 func main() {
-	// 1. Setup Config (Hardcoded as requested)
-	config := &liftshift.Config{
-		SrcHost:          "localhost",
-		SrcPort:          5432,
-		SrcDB:            "source_db",
-		SrcUser:          "postgres",
-		SrcPassword:      "password",
-		DstHost:          "localhost",
-		DstPort:          5432,
-		DstDB:            "target_db",
-		DstAdminUser:     "postgres",
-		DstAdminPassword: "password",
-		AppUser:          "app_user",
-		SkipBackup:       false,
-		ParallelJobs:     4,
-		DataParallelJobs: 2,
-		DryRun:           false,
+	// 1. Setup Config (Load from YAML)
+	configFile := "config.yaml"
+	if len(os.Args) > 1 {
+		configFile = os.Args[1] // Allow specifying config file as command line argument
+	}
+
+	config, err := liftshift.LoadConfigWithDefaults(configFile)
+	if err != nil {
+		log.Fatalf("Failed to load config from %s: %v", configFile, err)
 	}
 
 	// 2. Setup Logger
