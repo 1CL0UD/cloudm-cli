@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 )
 
@@ -18,7 +19,22 @@ func BackupTargetDatabase(config *Config) (string, error) {
 
 	// Create timestamp for the backup file
 	timestamp := time.Now().Format("20060102_150405")
+
+	// Get the user's home directory
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("failed to get user home directory: %w", err)
+	}
+
+	// Create the .cloudm-cli/backups directory
+	backupsDir := filepath.Join(homeDir, ".cloudm-cli", "backups")
+	err = os.MkdirAll(backupsDir, 0755)
+	if err != nil {
+		return "", fmt.Errorf("failed to create backups directory: %w", err)
+	}
+
 	backupFile := fmt.Sprintf("backup_pre_migration_%s.dump", timestamp)
+	fullBackupPath := filepath.Join(backupsDir, backupFile)
 
 	// Set PGPASSWORD environment variable for the duration of the command
 	env := os.Environ()
@@ -32,7 +48,7 @@ func BackupTargetDatabase(config *Config) (string, error) {
 		"-U", config.DstAdminUser,
 		"-d", config.DstDB,
 		"-Fc", // Custom format
-		"-f", backupFile,
+		"-f", fullBackupPath,
 	)
 
 	// Set the environment with the password
@@ -44,6 +60,6 @@ func BackupTargetDatabase(config *Config) (string, error) {
 		return "", fmt.Errorf("backup failed: %w\nOutput: %s", err, string(output))
 	}
 
-	fmt.Printf("Backup completed successfully: %s\n", backupFile)
-	return backupFile, nil
+	fmt.Printf("Backup completed successfully: %s\n", fullBackupPath)
+	return fullBackupPath, nil
 }

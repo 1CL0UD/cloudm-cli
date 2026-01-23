@@ -1,16 +1,16 @@
 source:
-  host: "source.db.example.com"
-  port: 5432
-  database: "mydb_staging"
+  host: "localhost"
+  port: 5441
+  database: "source_db"
   user: "postgres"
-  password: "${SRC_PASSWORD}"
+  password: "password"
 
 target:
-  host: "target.db.example.com"
-  port: 5432
-  database: "mydb"
+  host: "localhost"
+  port: 5442
+  database: "target_db"
   admin_user: "postgres"
-  admin_password: "${DST_ADMIN_PASSWORD}"
+  admin_password: "password"
   app_user: "app_user"
 
 options:

@@ -22,14 +22,20 @@ type Logger struct {
 func NewLogger() (*Logger, error) {
 	timestamp := time.Now().Format("20060102_150405")
 
-	// Get the directory of the executable
-	execPath, err := os.Executable()
+	// Get the user's home directory
+	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		// Fallback to current directory if we can't get executable path
-		execPath = os.Args[0]
+		return nil, fmt.Errorf("failed to get user home directory: %w", err)
 	}
-	execDir := filepath.Dir(execPath)
-	filename := filepath.Join(execDir, fmt.Sprintf("migration_%s.log", timestamp))
+
+	// Create the .cloudm-cli/logs directory
+	logsDir := filepath.Join(homeDir, ".cloudm-cli", "logs")
+	err = os.MkdirAll(logsDir, 0755)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create logs directory: %w", err)
+	}
+
+	filename := filepath.Join(logsDir, fmt.Sprintf("migration_%s.log", timestamp))
 
 	file, err := os.Create(filename)
 	if err != nil {

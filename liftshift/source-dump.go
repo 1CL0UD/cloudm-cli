@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 )
 
@@ -13,8 +14,30 @@ func DumpFromSource(config *Config) (string, string, error) {
 
 	// Create timestamp for the dump files
 	timestamp := time.Now().Format("20060102_150405")
+
+	// Get the user's home directory
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", "", fmt.Errorf("failed to get user home directory: %w", err)
+	}
+
+	// Create the .cloudm-cli directories
+	structDumpsDir := filepath.Join(homeDir, ".cloudm-cli", "structure-dumps")
+	dataDumpsDir := filepath.Join(homeDir, ".cloudm-cli", "data-dumps")
+	err = os.MkdirAll(structDumpsDir, 0755)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to create structure dumps directory: %w", err)
+	}
+	err = os.MkdirAll(dataDumpsDir, 0755)
+	if err != nil {
+		return "", "", fmt.Errorf("failed to create data dumps directory: %w", err)
+	}
+
 	structDumpFile := fmt.Sprintf("structure_%s.dump", timestamp)
 	dataDumpFile := fmt.Sprintf("data_%s.dump", timestamp)
+
+	structFullpath := filepath.Join(structDumpsDir, structDumpFile)
+	dataFullpath := filepath.Join(dataDumpsDir, dataDumpFile)
 
 	// Set PGPASSWORD environment variable for the duration of the command
 	env := os.Environ()
@@ -31,7 +54,7 @@ func DumpFromSource(config *Config) (string, string, error) {
 		"-n", "public", // Only public schema
 		"-s",  // Schema only
 		"-Fc", // Custom format
-		"-f", structDumpFile,
+		"-f", structFullpath,
 	)
 	structCmd.Env = env
 
@@ -39,7 +62,7 @@ func DumpFromSource(config *Config) (string, string, error) {
 	if err != nil {
 		return "", "", fmt.Errorf("structure dump failed: %w\nOutput: %s", err, string(output))
 	}
-	fmt.Printf("Structure dump completed: %s\n", structDumpFile)
+	fmt.Printf("Structure dump completed: %s\n", structFullpath)
 
 	// Dump data
 	fmt.Println("Dumping database data (excluding activity_log)...")
@@ -53,7 +76,7 @@ func DumpFromSource(config *Config) (string, string, error) {
 		"-a",                                  // Data only
 		"--exclude-table=public.activity_log", // Exclude activity_log table
 		"-Fc",                                 // Custom format
-		"-f", dataDumpFile,
+		"-f", dataFullpath,
 	)
 	dataCmd.Env = env
 
@@ -61,7 +84,7 @@ func DumpFromSource(config *Config) (string, string, error) {
 	if err != nil {
 		return "", "", fmt.Errorf("data dump failed: %w\nOutput: %s", err, string(output))
 	}
-	fmt.Printf("Data dump completed: %s\n", dataDumpFile)
+	fmt.Printf("Data dump completed: %s\n", dataFullpath)
 
-	return structDumpFile, dataDumpFile, nil
+	return structFullpath, dataFullpath, nil
 }
