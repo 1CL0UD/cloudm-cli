@@ -35,4 +35,4 @@ dbmigrate.yaml
 prod.yaml
 staging.yaml
 
-plan/
+#plan/
