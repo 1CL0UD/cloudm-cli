@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cloudm-cli
+  annotations:
+    github.com/project-slug: 1CL0UD/cloudm-cli
+spec:
+  type: other
+  lifecycle: unknown
+  owner: 1CL0UD
