@@ -4,6 +4,7 @@ metadata:
   name: cloudm-cli
   annotations:
     github.com/project-slug: 1CL0UD/cloudm-cli
+    backstage.io/techdocs-ref: dir:.
 spec:
   type: other
   lifecycle: unknown

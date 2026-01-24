@@ -1,0 +1,11 @@
+site_name: cloudm-cli
+site_description: A CLI tool for migrating PostgreSQL databases with dump, restore, and validation capabilities.
+
+repo_url: https://github.com/1CL0UD/cloudm-cli
+edit_uri: edit/main/docs
+
+nav:
+  - Home: index.md
+
+plugins:
+  - techdocs-core
